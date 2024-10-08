@@ -6,7 +6,7 @@ class User < ApplicationRecord
   validates :last_name, presence: true, on: :update, if: :last_name_changed?
 
   validates :username, presence: true, on: :update, if: :username_changed?
-  validates :username, format: { with: /\A[a-zA-Z0-9_]+\z/, message: "only allows letters, numbers, and underscores" }, 
+  validates :username, format: { with: /\A[a-zA-Z0-9_]+\z/, message: 'only allows letters, numbers, and underscores' },
                        length: { in: 3..20 },
                        if: :username_present?
 

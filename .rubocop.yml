@@ -12,6 +12,7 @@ require:
   - rubocop-rails
   - rubocop-rspec
   - rubocop-performance
+  - rubocop-factory_bot
 
 AllCops:
   Exclude:
@@ -26,3 +27,7 @@ AllCops:
     - 'config.ru'
     - 'Gemfile.lock'
     - 'Rakefile'
+
+RSpec:
+  Style/FrozenStringLiteralComment:
+    Enabled: true
