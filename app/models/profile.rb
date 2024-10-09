@@ -8,8 +8,4 @@ class Profile < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   belongs_to :user
-
-  def jwt_payload
-    super
-  end
 end

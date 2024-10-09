@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeedService
   def initialize(user)
     @user = user
@@ -7,4 +9,3 @@ class FeedService
     Post.includes(:user).where(user: @user.following).order(created_at: :desc)
   end
 end
-

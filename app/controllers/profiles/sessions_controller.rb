@@ -8,7 +8,7 @@ module Profiles
 
     private
 
-    def respond_with(resource, _opts = {})
+    def respond_with(_resource, _opts = {})
       render json: {
         message: 'Logged in successfully.',
         token: current_token
@@ -17,7 +17,8 @@ module Profiles
 
     def respond_to_on_destroy
       if request.headers['Authorization'].present?
-        jwt_payload = JWT.decode(request.headers['Authorization'].split(' ').last, Rails.application.credentials.fetch(:secret_key_base)).first
+        jwt_payload = JWT.decode(request.headers['Authorization'].split(' ').last,
+                                 Rails.application.credentials.fetch(:secret_key_base)).first
         current_user = User.find(jwt_payload['sub'])
       end
 

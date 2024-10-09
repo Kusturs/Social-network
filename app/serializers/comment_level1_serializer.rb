@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CommentLevel1Serializer < Panko::Serializer
   attributes :id, :content, :created_at, :updated_at
 

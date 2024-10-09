@@ -28,6 +28,13 @@ AllCops:
     - 'Gemfile.lock'
     - 'Rakefile'
 
+Style/Documentation:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+
 RSpec:
   Style/FrozenStringLiteralComment:
     Enabled: true
