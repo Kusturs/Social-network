@@ -1,12 +1,33 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+Dir[Rails.root.join('spec/swagger/components/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
   # NOTE: If you're using the rswag-api to serve API descriptions, you'll need
   # to ensure that it's configured to serve Swagger from the same folder
   config.openapi_root = Rails.root.join('swagger').to_s
+
+  config.swagger_docs = {
+    'v1/swagger.yaml' => {
+      openapi: '3.0.1',
+      info: {
+        title: 'API V1',
+        version: 'v1'
+      },
+      paths: {},
+      components: {
+        schemas: {
+          comment: Swagger::Components::Comment.schema,
+          user: Swagger::Components::User.schema,
+          pagination: Swagger::Components::Pagination.schema,
+          error: Swagger::Components::Error.schema,
+          errors: Swagger::Components::Errors.schema
+        }
+      }
+    }
+  }
 
   # Define one or more Swagger documents and provide global metadata for each one
   # When you run the 'rswag:specs:swaggerize' rake task, the complete Swagger will
@@ -22,6 +43,15 @@ RSpec.configure do |config|
         version: 'v1'
       },
       paths: {},
+      components: {
+        schemas: {
+          comment: Swagger::Components::Comment.schema,
+          user: Swagger::Components::User.schema,
+          pagination: Swagger::Components::Pagination.schema,
+          error: Swagger::Components::Error.schema,
+          errors: Swagger::Components::Errors.schema
+        }
+      },
       servers: [
         {
           url: 'http://localhost:3000'

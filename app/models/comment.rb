@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Comment < ApplicationRecord
-  belongs_to :author, class_name: 'User', dependent: :destroy, inverse_of: :comments
+  belongs_to :author, class_name: 'User', inverse_of: :comments
   belongs_to :post, dependent: :destroy, inverse_of: :comments
-  belongs_to :parent, class_name: 'Comment', optional: true, inverse_of: :replies
-  has_many :replies, class_name: 'Comment', foreign_key: 'parent_id', dependent: :destroy, inverse_of: :parent
+  belongs_to :parent, class_name: 'Comment', optional: true, dependent: :nullify
+  has_many :replies, class_name: 'Comment', foreign_key: 'parent_id', inverse_of: :parent
 
   validates :content, length: { maximum: 1000 }
   validate :parent_comment_belongs_to_same_post

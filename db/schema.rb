@@ -15,8 +15,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_09_180114) do
   enable_extension "plpgsql"
 
   create_table "comments", force: :cascade do |t|
-    t.bigint "author_id", null: false
-    t.bigint "post_id", null: false
+    t.bigint "author_id"
+    t.bigint "post_id"
     t.bigint "parent_id"
     t.text "content", null: false
     t.datetime "created_at", null: false
@@ -76,9 +76,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_09_180114) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "comments", "comments", column: "parent_id"
-  add_foreign_key "comments", "posts"
-  add_foreign_key "comments", "users", column: "author_id"
+  add_foreign_key "comments", "comments", column: "parent_id", on_delete: :nullify
+  add_foreign_key "comments", "posts", on_delete: :nullify
+  add_foreign_key "comments", "users", column: "author_id", on_delete: :nullify
   add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "profiles", "users"
   add_foreign_key "subscriptions", "users", column: "followed_id"
