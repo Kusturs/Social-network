@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  has_many :posts, dependent: :destroy, inverse_of: :author
+  has_one :profile, dependent: :destroy
 
-  has_many :follower_subscriptions, class_name: 'Subscription', foreign_key: 'followed_id', inverse_of: :followed
-  has_many :followers, through: :follower_subscriptions, source: :follower, inverse_of: :followed_users
+  has_many :posts, foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
+  has_many :comments, foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
 
-  has_many :followed_subscriptions, class_name: 'Subscription', foreign_key: 'follower_id', inverse_of: :follower
-  has_many :followed_users, through: :followed_subscriptions, source: :followed, inverse_of: :followers
+  has_many :active_subscriptions, class_name: 'Subscription', foreign_key: :follower_id, dependent: :destroy,
+                                  inverse_of: :follower
+
+  has_many :passive_subscriptions, class_name: 'Subscription', foreign_key: :followed_id, dependent: :destroy,
+                                   inverse_of: :followed
 
   validates :first_name, :last_name, :username, presence: true, on: :create
 
@@ -21,15 +24,15 @@ class User < ApplicationRecord
                        if: :username_present?
 
   def follow(user)
-    followed_users << user unless self == user
+    active_subscriptions.create(followed: user)
   end
 
   def unfollow(user)
-    followed_users.delete(user)
+    active_subscriptions.find_by(followed: user).destroy
   end
 
   def following?(user)
-    followed_users.include?(user)
+    active_subscriptions.exists?(followed: user)
   end
 
   private
