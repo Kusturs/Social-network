@@ -53,6 +53,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_08_213534) do
     t.string "last_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "followers_count", default: 0
+    t.integer "followed_users_count", default: 0
     t.index ["last_name", "first_name"], name: "index_users_on_last_name_and_first_name"
     t.index ["last_name"], name: "index_users_on_last_name"
     t.index ["username"], name: "index_users_on_username", unique: true
