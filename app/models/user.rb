@@ -2,6 +2,12 @@
 
 class User < ApplicationRecord
   has_one :profile, dependent: :destroy
+<<<<<<< HEAD
+=======
+
+  has_many :posts, foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
+  has_many :comments, dependent: :destroy
+>>>>>>> 1218541 (np)
 
   has_many :posts, foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
   has_many :comments, foreign_key: 'author_id', inverse_of: :author, dependent: :destroy
