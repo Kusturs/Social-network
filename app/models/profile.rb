@@ -8,16 +8,4 @@ class Profile < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   belongs_to :user
-
-  # before_create :set_jti
-
-  # def jwt_payload
-  #   super.merge('profile_id' => id)
-  # end
-
-  # private
-
-  # def set_jti
-  #   self.jti ||= SecureRandom.uuid
-  # end
 end

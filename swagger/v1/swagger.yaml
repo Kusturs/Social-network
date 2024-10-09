@@ -3,9 +3,146 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
-paths: {}
+paths:
+  "/posts":
+    get:
+      summary: Lists all posts
+      tags:
+      - Posts
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: posts found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    content:
+                      type: string
+                    author:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        email:
+                          type: string
+                    comments:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          content:
+                            type: string
+    post:
+      summary: Creates a post
+      tags:
+      - Posts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: post created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                author_id:
+                  type: integer
+              required:
+              - content
+              - author_id
+  "/posts/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: post id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieves a post
+      tags:
+      - Posts
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: post found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+        '404':
+          description: post not found
+    put:
+      summary: Updates a post
+      tags:
+      - Posts
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: post updated
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+    delete:
+      summary: Deletes a post
+      tags:
+      - Posts
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: post deleted
 servers:
-- url: https://{defaultHost}
-  variables:
-    defaultHost:
-      default: www.example.com
+- url: http://localhost:3000
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer

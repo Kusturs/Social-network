@@ -36,6 +36,7 @@ gem 'devise-jwt', '~> 0.11.0'
 
 gem 'rswag-api'
 gem 'rswag-ui'
+gem 'rswag-specs'
 
 gem 'pagy', '~> 6.0'
 gem 'panko_serializer'

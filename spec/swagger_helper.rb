@@ -24,14 +24,17 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: 'https://{defaultHost}',
-          variables: {
-            defaultHost: {
-              default: 'www.example.com'
-            }
+          url: 'http://localhost:3000'
+        }
+      ],
+      components: {
+        securitySchemes: {
+          bearer_auth: {
+            type: :http,
+            scheme: :bearer
           }
         }
-      ]
+      }
     }
   }
 

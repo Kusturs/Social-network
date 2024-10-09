@@ -34,9 +34,11 @@ class UsersController < BaseController
     head :no_content
   end
 
-  # def me
-  #   render json: UserSerializer.new.serialize_to_json(current_user)
-  # end
+  def me
+    @feed = FeedService.new(current_user).call
+
+    render json: FeedSerializer.new.serialize_to_json(feed)
+  end
 
   private
 
