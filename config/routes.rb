@@ -18,8 +18,8 @@ Rails.application.routes.draw do
                registration: 'signup'
              },
              controllers: {
-               sessions: 'sessions',
-               registrations: 'registrations'
+               sessions: 'profiles/sessions',
+               registrations: 'profiles/registrations'
              }
 
   resources :users, only: %i[index show create update destroy] do

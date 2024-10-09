@@ -11,13 +11,34 @@ class ApplicationController < ActionController::API
 
   private
 
+  def authenticate_user!
+    if request.headers['Authorization'].present?
+      bearer_token = request.headers['Authorization'].split(' ').last
+      signature = Rails.application.credentials.secret_key_base
+      jwt_payload = JWT.decode(bearer_token, signature).first
+
+      @current_user_id = jwt_payload['sub']
+    end
+
+    render json: { errors: 'Not Authorized' }, status: :unauthorized unless signed_in?
+  end
+
+  def signed_in?
+    @current_user_id.present?
+  end
+
+  def current_user
+    @current_user ||= User.find(@current_user_id)
+  end
+
   def invalid_token
     render json: { error: 'Invalid token' }, status: :unauthorized
   end
 
-  def authenticate_profile!
-    return if profile_signed_in?
+  # def authenticate_profile!
+  #   # debugger
+  #   return if profile_signed_in?
 
-    render json: { error: 'You need to sign in or sign up before continuing.' }, status: :unauthorized
-  end
+  #   render json: { error: 'You need to sign in or sign up before continuing.' }, status: :unauthorized
+  # end
 end
