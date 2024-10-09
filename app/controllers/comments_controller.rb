@@ -8,7 +8,7 @@ class CommentsController < BaseController
 
   def index
     @pagy, @comments = pagy(comments_scope)
-    
+
     render json: {
       comments: serialize_comments(@comments),
       pagination: pagy_metadata(@pagy)
@@ -39,13 +39,8 @@ class CommentsController < BaseController
   end
 
   def destroy
-    if @comment.replies.empty?
-      debugger
-      @comment.destroy
-      head :no_content
-    else
-      render json: { error: 'Comment has replies and cannot be deleted' }, status: :conflict
-    end
+    @comment.destroy!
+    head :no_content
   end
 
   private

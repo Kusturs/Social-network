@@ -5,7 +5,7 @@ class Subscription < ApplicationRecord
   belongs_to :followed, class_name: 'User', counter_cache: :followers_count
 
   validate :not_self_follow
-  validates :follower_id, uniqueness: { scope: :followed_id, message: "already follows this user" }
+  validates :follower_id, uniqueness: { scope: :followed_id, message: 'already follows this user' }
 
   private
 

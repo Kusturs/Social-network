@@ -31,3 +31,6 @@ AllCops:
 RSpec:
   Style/FrozenStringLiteralComment:
     Enabled: true
+
+Style/Documentation:
+  Enabled: false

@@ -5,34 +5,24 @@ info:
   version: v1
 paths:
   "/posts/{post_id}/comments":
-    parameters:
-    - name: post_id
-      in: path
-      description: ID поста
-      required: true
-      schema:
-        type: integer
     get:
       summary: Получить список комментариев
       tags:
-      - Комментарии
+      - Comments
       parameters:
-      - name: parent_id
-        in: query
-        required: false
-        description: ID родительского комментария
+      - name: post_id
+        in: path
+        required: true
         schema:
           type: integer
       - name: page
         in: query
         required: false
-        description: Номер страницы
         schema:
           type: integer
       - name: items
         in: query
         required: false
-        description: Количество элементов на странице
         schema:
           type: integer
       responses:
@@ -46,106 +36,35 @@ paths:
                   comments:
                     type: array
                     items:
-                      "$ref": "#/components/schemas/comment"
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            username:
+                              type: string
+                        created_at:
+                          type: string
+                          format: date-time
                   pagination:
-                    "$ref": "#/components/schemas/pagination"
-    post:
-      summary: Создать новый комментарий
-      tags:
-      - Комментарии
-      parameters: []
-      responses:
-        '201':
-          description: комментарий создан
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/comment"
-        '422':
-          description: неверные параметры
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/errors"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                content:
-                  type: string
-                parent_id:
-                  type: integer
-                  nullable: true
-              required:
-              - content
-  "/comments/{id}":
-    parameters:
-    - name: id
-      in: path
-      description: ID комментария
-      required: true
-      schema:
-        type: integer
-    get:
-      summary: Получить комментарий
-      tags:
-      - Комментарии
-      responses:
-        '200':
-          description: комментарий найден
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/comment"
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page:
+                        type: integer
+                      items:
+                        type: integer
+                      pages:
+                        type: integer
         '404':
-          description: комментарий не найден
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
-    patch:
-      summary: Обновить комментарий
-      tags:
-      - Комментарии
-      parameters: []
-      responses:
-        '200':
-          description: комментарий обновлен
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/comment"
-        '422':
-          description: неверные параметры
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/errors"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                content:
-                  type: string
-              required:
-              - content
-    delete:
-      summary: Удалить комментарий
-      tags:
-      - Комментарии
-      responses:
-        '204':
-          description: комментарий удален
-        '409':
-          description: конфликт при удалении
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/error"
+          description: пост не найден
   "/posts":
     get:
       summary: returns all posts
