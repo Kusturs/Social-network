@@ -40,7 +40,7 @@ class UsersController < BaseController
     render json: {
       followers_count: feed_data[:user_info][:followers_count],
       following_count: feed_data[:user_info][:following_count],
-      posts: Panko::ArraySerializer.new(feed_data[:feed_posts], each_serializer: FeedSerializer).to_json
+      posts: Panko::ArraySerializer.new(feed_data[:feed_posts], each_serializer: FeedSerializer).as_json["subjects"]
     }
   end
 
