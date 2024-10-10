@@ -6,7 +6,7 @@ info:
 paths:
   "/posts/{post_id}/comments":
     get:
-      summary: Получить список комментариев
+      summary: Get comments
       tags:
       - Comments
       parameters:
@@ -21,6 +21,11 @@ paths:
         schema:
           type: integer
       - name: items
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: parent_id
         in: query
         required: false
         schema:
@@ -65,6 +70,90 @@ paths:
                         type: integer
         '404':
           description: пост не найден
+    post:
+      summary: Create a comment
+      tags:
+      - Comments
+      parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '201':
+          description: comment created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                parent_id:
+                  type: integer
+                  nullable: true
+              required:
+              - content
+  "/comments/{id}":
+    get:
+      summary: Get a comment
+      tags:
+      - Comments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: comment found
+        '404':
+          description: comment not found
+    patch:
+      summary: Update a comment
+      tags:
+      - Comments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: comment updated
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+              - content
+    delete:
+      summary: Delete a comment
+      tags:
+      - Comments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: comment deleted
+        '404':
+          description: comment not found
   "/posts":
     get:
       summary: returns all posts
