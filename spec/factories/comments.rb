@@ -10,7 +10,16 @@ FactoryBot.define do
     end
 
     factory :reply do
-      parent { association :comment }
+      transient do
+        parent_comment { nil }
+      end
+
+      parent { parent_comment || association(:comment) }
+      post { parent&.post }
+
+      after(:build) do |comment, evaluator|
+        comment.post ||= comment.parent.post if comment.parent
+      end
     end
   end
 end

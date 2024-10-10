@@ -7,39 +7,56 @@ RSpec.describe 'Posts API', type: :request do
   let(:Authorization) { "Bearer #{token}" }
   let(:existing_post) { create(:post, author: user) }
 
+  before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+  end
+
   path '/posts' do
     get 'Lists all posts' do
       tags 'Posts'
       security [ bearer_auth: [] ]
       produces 'application/json'
 
-
       response '200', 'posts found' do
-        schema type: :array,
-          items: {
-            type: :object,
-            properties: {
-              id: { type: :integer },
-              content: { type: :string },
-              author: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  email: { type: :string }
-                }
-              },
-              comments: {
-                type: :array,
-                items: {
+        schema type: :object,
+        properties: {
+          posts: {
+            type: :array,
+            items: {
+              type: :object,
+              properties: {
+                id: { type: :integer },
+                content: { type: :string },
+                author: {
                   type: :object,
                   properties: {
                     id: { type: :integer },
-                    content: { type: :string }
+                    email: { type: :string }
+                  }
+                },
+                comments: {
+                  type: :array,
+                  items: {
+                    type: :object,
+                    properties: {
+                      id: { type: :integer },
+                      content: { type: :string }
+                    }
                   }
                 }
               }
             }
+          },
+          pagination: {
+            type: :object,
+            properties: {
+              count: { type: :integer },
+              page: { type: :integer },
+              items: { type: :integer },
+              pages: { type: :integer }
+            }
           }
+        }
 
         run_test!
       end
@@ -142,7 +159,6 @@ RSpec.describe 'Posts API', type: :request do
     delete 'Deletes a post' do
       tags 'Posts'
       security [ bearer_auth: [] ]
-
 
       response '204', 'post deleted' do
         let(:id) { existing_post.id }

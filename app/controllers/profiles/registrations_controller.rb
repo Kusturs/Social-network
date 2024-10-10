@@ -2,6 +2,9 @@
 
 module Profiles
   class RegistrationsController < Devise::RegistrationsController
+    include RackSessionsFix
+    respond_to :json
+
     def create
       build_resource(sign_up_params)
       resource.build_user(user_params)

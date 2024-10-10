@@ -3,6 +3,7 @@ FactoryBot.define do
     sequence(:username) { |n| "user#{n}" }
     sequence(:first_name) { |n| "first_name#{n}" }
     sequence(:last_name) { |n| "last_name#{n}" }
+    sequence(:second_name) { |n| "second_name#{n}" }
     followers_count { 0 }
     followed_count { 0 }
 

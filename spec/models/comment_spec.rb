@@ -1,81 +1,113 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
   let(:user) { create(:user) }
   let(:post) { create(:post) }
-  let(:parent_comment) { create(:comment, post: post) }
+  let(:comment) { build(:comment, author: user, post: post) }
 
   describe 'associations' do
-    it { should belong_to(:author).class_name('User') }
-    it { should belong_to(:post) }
+    it { should belong_to(:author).class_name('User').inverse_of(:comments) }
+    it { should belong_to(:post).inverse_of(:comments) }
     it { should belong_to(:parent).class_name('Comment').optional }
-    it { should have_many(:replies).class_name('Comment') }
+    it { should have_many(:replies).class_name('Comment').with_foreign_key('parent_id').inverse_of(:parent) }
   end
 
   describe 'validations' do
-    it { should validate_length_of(:content).is_at_most(1000) }
+    it { should validate_length_of(:content).is_at_most(100) }
 
     context 'parent comment belongs to same post' do
-      let(:comment) { build(:comment, post: post, parent: parent_comment) }
-
-      it 'is valid' do
-        expect(comment).to be_valid
+      it 'is valid when parent comment belongs to the same post' do
+        parent_comment = create(:comment, post: post)
+        reply = build(:reply, parent_comment: parent_comment, post: post)
+        expect(reply).to be_valid
       end
-    end
 
-    context 'parent comment belongs to different post' do
-      let(:other_post) { create(:post) }
-      let(:comment) { build(:comment, post: post, parent: create(:comment, post: other_post)) }
-
-      it 'is invalid' do
-        expect(comment).to be_invalid
-        expect(comment.errors[:parent]).to include('must belong to the same post')
+      it 'is invalid when parent comment belongs to a different post' do
+        different_post = create(:post)
+        parent_comment = create(:comment, post: different_post)
+        reply = build(:reply, parent_comment: parent_comment, post: post)
+        expect(reply).to be_invalid
+        expect(reply.errors[:parent]).to include('must belong to the same post')
       end
     end
   end
 
   describe 'scopes' do
     describe '.root_comments' do
-      let!(:root_comment) { create(:comment, post: post) }
-      let!(:reply) { create(:comment, post: post, parent: root_comment) }
-
       it 'returns only root comments' do
+        root_comment = create(:comment, post: post)
+        child_comment = create(:reply, parent_comment: root_comment)
         expect(Comment.root_comments).to include(root_comment)
-        expect(Comment.root_comments).not_to include(reply)
+        expect(Comment.root_comments).not_to include(child_comment)
+      end
+    end
+  end
+
+  describe 'callbacks' do
+    describe 'before_destroy' do
+      it 'prevents deletion if the comment has replies' do
+        parent = create(:comment)
+        create(:reply, parent_comment: parent)
+        expect { parent.destroy }.not_to change(Comment, :count)
+        expect(parent.errors[:base]).to include('you cannot delete a comment that has replies')
+      end
+
+      it 'allows deletion if the comment has no replies' do
+        comment = create(:comment)
+        expect { comment.destroy }.to change(Comment, :count).by(-1)
+      end
+    end
+
+    describe 'before_create' do
+      it 'sets the post from the parent comment' do
+        parent_comment = create(:comment)
+        child_comment = build(:reply, parent_comment: parent_comment, post: nil)
+        child_comment.save
+        expect(child_comment.post).to eq(parent_comment.post)
       end
     end
   end
 
   describe '#replies?' do
-    let(:post) { create(:post) }
-    let(:comment) { create(:comment, post: post) }
-
-    context 'when comment has replies' do
-      before { create(:comment, parent: comment, post: post) }
-
-      it 'returns true' do
-        expect(comment.replies?).to be true
-      end
+    it 'returns true if the comment has replies' do
+      parent = create(:comment)
+      create(:reply, parent_comment: parent)
+      expect(parent.replies?).to be true
     end
 
-    context 'when comment has no replies' do
-      it 'returns false' do
-        expect(comment.replies?).to be false
-      end
+    it 'returns false if the comment has no replies' do
+      comment = create(:comment)
+      expect(comment.replies?).to be false
     end
   end
 
-  describe 'before_destroy callback' do
-    let(:post) { create(:post) }
-    let(:comment) { create(:comment, post: post) }
-  
-    context 'when comment has no replies' do
-      it 'allows destruction' do
-        comment.destroy!
-        expect(comment.destroyed?).to be true
-      end
+  describe '.delete_with_replies' do
+    it 'deletes the comment and all its replies' do
+      root = create(:comment)
+      child1 = create(:reply, parent_comment: root)
+      child2 = create(:reply, parent_comment: root)
+      grandchild = create(:reply, parent_comment: child1)
+
+      expect {
+        Comment.delete_with_replies(root.id)
+      }.to change(Comment, :count).by(-4)
+
+      expect(Comment.exists?(root.id)).to be false
+      expect(Comment.exists?(child1.id)).to be false
+      expect(Comment.exists?(child2.id)).to be false
+      expect(Comment.exists?(grandchild.id)).to be false
+    end
+
+    it 'does not delete unrelated comments' do
+      root = create(:comment)
+      child = create(:reply, parent_comment: root)
+      unrelated = create(:comment)
+
+      expect {
+        Comment.delete_with_replies(root.id)
+      }.to change(Comment, :count).by(-2)
+
+      expect(Comment.exists?(unrelated.id)).to be true
     end
   end
 end

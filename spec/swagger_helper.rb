@@ -9,25 +9,25 @@ RSpec.configure do |config|
   # to ensure that it's configured to serve Swagger from the same folder
   config.openapi_root = Rails.root.join('swagger').to_s
 
-  config.swagger_docs = {
-    'v1/swagger.yaml' => {
-      openapi: '3.0.1',
-      info: {
-        title: 'API V1',
-        version: 'v1'
-      },
-      paths: {},
-      components: {
-        schemas: {
-          comment: Swagger::Components::Comment.schema,
-          user: Swagger::Components::User.schema,
-          pagination: Swagger::Components::Pagination.schema,
-          error: Swagger::Components::Error.schema,
-          errors: Swagger::Components::Errors.schema
-        }
-      }
-    }
-  }
+  # config.swagger_docs = {
+  #   'v1/swagger.yaml' => {
+  #     openapi: '3.0.1',
+  #     info: {
+  #       title: 'API V1',
+  #       version: 'v1'
+  #     },
+  #     paths: {},
+  #     components: {
+  #       schemas: {
+  #         comment: Swagger::Components::Comment.schema,
+  #         user: Swagger::Components::User.schema,
+  #         pagination: Swagger::Components::Pagination.schema,
+  #         error: Swagger::Components::Error.schema,
+  #         errors: Swagger::Components::Errors.schema
+  #       }
+  #     }
+  #   }
+  # }
 
   # Define one or more Swagger documents and provide global metadata for each one
   # When you run the 'rswag:specs:swaggerize' rake task, the complete Swagger will
@@ -50,6 +50,12 @@ RSpec.configure do |config|
           pagination: Swagger::Components::Pagination.schema,
           error: Swagger::Components::Error.schema,
           errors: Swagger::Components::Errors.schema
+        },
+        securitySchemes: {
+          bearer_auth: {
+            type: :http,
+            scheme: :bearer
+          }
         }
       },
       servers: [
@@ -57,14 +63,6 @@ RSpec.configure do |config|
           url: 'http://localhost:3000'
         }
       ],
-      components: {
-        securitySchemes: {
-          bearer_auth: {
-            type: :http,
-            scheme: :bearer
-          }
-        }
-      }
     }
   }
 

@@ -9,13 +9,35 @@ class Comment < ApplicationRecord
   before_destroy :ensure_no_replies
   before_create :set_post_from_parent
 
-  validates :content, length: { maximum: 1000 }
+  validates :content, length: { minimum: 1, maximum: 100 }, presence: true
   validate :parent_comment_belongs_to_same_post
 
   scope :root_comments, -> { where(parent_id: nil) }
 
   def replies?
     replies.any?
+  end
+
+  def self.delete_with_replies(comment_id)
+    sql = <<-SQL
+      WITH RECURSIVE comment_tree AS (
+        SELECT id, parent_id, 0 AS depth
+        FROM comments
+        WHERE id = :root_id
+        UNION ALL
+        SELECT c.id, c.parent_id, ct.depth + 1
+        FROM comments c
+        INNER JOIN comment_tree ct ON c.parent_id = ct.id
+      )
+      DELETE FROM comments
+      WHERE id IN (
+        SELECT id
+        FROM comment_tree
+        ORDER BY depth DESC
+      );
+    SQL
+
+    connection.execute(sanitize_sql([sql, root_id: comment_id]))
   end
 
   private

@@ -37,9 +37,7 @@ Rails.application.routes.draw do
     resources :comments, only: %i[index create]
   end
 
-  resources :posts do
-    resources :comments, shallow: true
-  end
+  resources :comments
 
   resources :subscriptions, only: %i[index destroy]
 end

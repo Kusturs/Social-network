@@ -1,33 +1,26 @@
 # frozen_string_literal: true
 
 class SubscriptionsController < BaseController
-  # before_action :authenticate_user!
-  before_action :set_user, only: [:create]
-  before_action :set_subscription, only: [:destroy]
+  before_action :authenticate_user!
+  before_action :set_user, only: %i[create destroy]
 
   def create
-    # @subscription = current_user.followed_subscriptions.new(followed: @user)
-    # @subscription = Subscription.new(follower: current_user, followed: @user)
-
-    if @subscription.save
-      render json: SubscriptionSerializer.new.serialize_to_json(@subscription), status: :created
+    if current_user.follow(@user)
+      render json: { message: 'User followed successfully', followed_id: @user.id }, status: :created
     else
       unprocessable_entity(@subscription)
     end
   end
 
   def destroy
-    @subscription.destroy
-    head :no_content
+    if current_user.unfollow(@user)
+      render json: { message: 'User unfollowed successfully', followed_id: @user.id }, status: :ok
+    else
+      unprocessable_entity(@subscription)
+    end
   end
-
-  private
 
   def set_user
     @user = User.find(params[:followed_id])
   end
-
-  # def set_subscription
-  #   @subscription = current_user.followed_subscriptions.find(params[:id])
-  # end
 end

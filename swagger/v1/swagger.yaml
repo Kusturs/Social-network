@@ -4,6 +4,158 @@ info:
   title: API V1
   version: v1
 paths:
+  "/posts/{post_id}/comments":
+    parameters:
+    - name: post_id
+      in: path
+      description: post id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Lists all comments for a post
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: parent_id
+        in: query
+        required: false
+        description: Parent comment ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: comments found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            email:
+                              type: string
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page:
+                        type: integer
+                      items:
+                        type: integer
+                      pages:
+                        type: integer
+    post:
+      summary: Creates a comment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: comment created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    content:
+                      type: string
+                    parent_id:
+                      type: integer
+                  required:
+                  - content
+  "/comments/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: comment id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieves a comment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: comment found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+        '404':
+          description: comment not found
+    put:
+      summary: Updates a comment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: comment updated
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    content:
+                      type: string
+                  required:
+                  - content
+    delete:
+      summary: Deletes a comment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: comment deleted
   "/posts":
     get:
       summary: Lists all posts
@@ -17,30 +169,44 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    content:
-                      type: string
-                    author:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
                       type: object
                       properties:
                         id:
                           type: integer
-                        email:
+                        content:
                           type: string
-                    comments:
-                      type: array
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            email:
+                              type: string
+                        comments:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              content:
+                                type: string
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page:
+                        type: integer
                       items:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          content:
-                            type: string
+                        type: integer
+                      pages:
+                        type: integer
     post:
       summary: Creates a post
       tags:
@@ -139,10 +305,419 @@ paths:
       responses:
         '204':
           description: post deleted
-servers:
-- url: http://localhost:3000
+  "/signup":
+    post:
+      summary: Creates a new profile and user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '201':
+          description: profile created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  profile:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          username:
+                            type: string
+                          first_name:
+                            type: string
+                          last_name:
+                            type: string
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                  required:
+                  - email
+                  - password
+                  - password_confirmation
+                user:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                  required:
+                  - username
+                  - first_name
+                  - last_name
+              required:
+              - profile
+              - user
+  "/login":
+    post:
+      summary: Creates a session (logs in)
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                required:
+                - message
+                - token
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                  required:
+                  - email
+                  - password
+              required:
+              - profile
+  "/logout":
+    delete:
+      summary: Destroys a session (logs out)
+      tags:
+      - Authentication
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+  "/users":
+    get:
+      summary: Lists all users
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: users found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        username:
+                          type: string
+                        first_name:
+                          type: string
+                        second_name:
+                          type: string
+                        last_name:
+                          type: string
+                        posts:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              content:
+                                type: string
+                        comments:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              content:
+                                type: string
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page:
+                        type: integer
+                      items:
+                        type: integer
+                      pages:
+                        type: integer
+    post:
+      summary: Creates a user
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: user created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                first_name:
+                  type: string
+                second_name:
+                  type: string
+                last_name:
+                  type: string
+              required:
+              - username
+  "/users/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: user id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieves a user
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: user found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  first_name:
+                    type: string
+                  second_name:
+                    type: string
+                  last_name:
+                    type: string
+                  posts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+                  comments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+        '404':
+          description: user not found
+    put:
+      summary: Updates a user
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: user updated
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                first_name:
+                  type: string
+                second_name:
+                  type: string
+                last_name:
+                  type: string
+    delete:
+      summary: Deletes a user
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: user deleted
 components:
+  schemas:
+    comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        author:
+          "$ref": "#/components/schemas/user"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        parent_id:
+          type: integer
+          nullable: true
+      required:
+      - id
+      - content
+      - author
+      - created_at
+      - updated_at
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+      required:
+      - id
+      - username
+    pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        page:
+          type: integer
+        items:
+          type: integer
+        pages:
+          type: integer
+      required:
+      - count
+      - page
+      - items
+      - pages
+    error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    errors:
+      type: object
+      properties:
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+      required:
+      - errors
   securitySchemes:
     bearer_auth:
       type: http
       scheme: bearer
+servers:
+- url: http://localhost:3000

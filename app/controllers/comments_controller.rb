@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class CommentsController < BaseController
-  include Pagy::Backend
-
-  before_action :set_post, only: %i[index create]
   before_action :set_comment, only: %i[show update destroy]
 
   def index
@@ -20,8 +17,18 @@ class CommentsController < BaseController
   end
 
   def create
-    @comment = @post.comments.build(create_comment_params)
-    @comment.author = User.first # Замените на current_user, когда будет реализована аутентификация
+    parent_id = params[:comment][:parent_id]
+    post_id = params[:post_id]
+
+    if parent_id.present?
+      parent_comment = Comment.find(parent_id)
+      @comment = parent_comment.replies.build(comment_params)
+    else
+      post = Post.find(post_id)
+      @comment = post.comments.build(comment_params)
+    end
+
+    @comment.author = current_user
 
     if @comment.save
       render json: serialize_comment(@comment), status: :created
@@ -31,7 +38,7 @@ class CommentsController < BaseController
   end
 
   def update
-    if @comment.update(update_comment_params)
+    if @comment.update(comment_params)
       render json: serialize_comment(@comment)
     else
       unprocessable_entity(@comment)
@@ -39,37 +46,29 @@ class CommentsController < BaseController
   end
 
   def destroy
-    @comment.destroy!
+    Comment.delete_with_replies(@comment.id)
     head :no_content
   end
 
   private
-
-  def set_post
-    @post = Post.find(params[:post_id])
-  end
 
   def set_comment
     @comment = Comment.find(params[:id])
   end
 
   def comments_scope
-    @post.comments
-         .where(parent_id: params[:parent_id])
-         .includes(:author)
-         .order(created_at: :desc)
+    Post.find(params[:post_id]).comments
+        .where(parent_id: params[:parent_id])
+        .includes(:author)
+        .order(created_at: :desc)
   end
 
-  def create_comment_params
-    params.require(:comment).permit(:content, :parent_id)
-  end
-
-  def update_comment_params
+  def comment_params
     params.require(:comment).permit(:content)
   end
 
   def serialize_comments(comments)
-    Panko::ArraySerializer.new(comments, each_serializer: Comments::RootSerializer).as_json
+    Panko::ArraySerializer.new(comments, each_serializer: Comments::RootSerializer).to_a
   end
 
   def serialize_comment(comment)

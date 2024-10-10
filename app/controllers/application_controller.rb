@@ -34,11 +34,4 @@ class ApplicationController < ActionController::API
   def invalid_token
     render json: { error: 'Invalid token' }, status: :unauthorized
   end
-
-  # def authenticate_profile!
-  #   # debugger
-  #   return if profile_signed_in?
-
-  #   render json: { error: 'You need to sign in or sign up before continuing.' }, status: :unauthorized
-  # end
 end
