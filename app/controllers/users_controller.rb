@@ -35,9 +35,13 @@ class UsersController < BaseController
   end
 
   def me
-    @feed = FeedService.new(current_user).call
+    feed_data = FeedService.new(current_user).call
 
-    render json: FeedSerializer.new.serialize_to_json(feed)
+    render json: {
+      followers_count: feed_data[:user_info][:followers_count],
+      following_count: feed_data[:user_info][:following_count],
+      posts: Panko::ArraySerializer.new(feed_data[:feed_posts], each_serializer: FeedSerializer).to_json
+    }
   end
 
   private
