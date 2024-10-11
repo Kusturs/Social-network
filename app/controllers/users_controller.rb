@@ -4,7 +4,7 @@ class UsersController < BaseController
   before_action :set_user, only: %i[show update]
 
   def index
-    @pagy, @users = pagy(users_scope)
+    @pagy, @users = pagy(User.all)
 
     render json: {
       users: serialize_users(@users),
@@ -41,10 +41,6 @@ class UsersController < BaseController
 
   def user_params
     params.require(:user).permit(:username, :first_name, :second_name, :last_name)
-  end
-
-  def users_scope
-    User.includes(:posts, :comments)
   end
 
   def serialize_users(users)

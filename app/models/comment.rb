@@ -2,7 +2,7 @@
 
 class Comment < ApplicationRecord
   belongs_to :author, class_name: 'User', inverse_of: :comments
-  belongs_to :post, inverse_of: :comments
+  belongs_to :post, inverse_of: :comments, counter_cache: true
   belongs_to :parent, class_name: 'Comment', optional: true
   has_many :replies, class_name: 'Comment', foreign_key: 'parent_id', inverse_of: :parent
 

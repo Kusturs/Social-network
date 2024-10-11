@@ -14,7 +14,7 @@ class PostsController < BaseController
   end
 
   def show
-    render json: PostSerializer.new.serialize_to_json(@post)
+    render json: Posts::ShowSerializer.new.serialize_to_json(@post)
   end
 
   def create
@@ -55,14 +55,14 @@ class PostsController < BaseController
   end
 
   def posts_scope
-    Post.includes(:author, comments: :author).order(created_at: :desc)
+    Post.includes(:comments).order(created_at: :desc)
   end
 
   def serialize_posts(posts)
-    Panko::ArraySerializer.new(posts, each_serializer: PostSerializer).to_a
+    Panko::ArraySerializer.new(posts, each_serializer: Posts::IndexSerializer).to_a
   end
 
   def serialize_post(post)
-    PostSerializer.new.serialize_to_json(post)
+    Posts::ShowSerializer.new.serialize_to_json(post)
   end
 end

@@ -53,6 +53,7 @@ group :development, :test do
 
   gem 'factory_bot_rails'
 
+  gem 'bullet'
   gem 'rubocop', require: false
   gem 'rubocop-factory_bot', '~> 2.26', '>= 2.26.1', require: false
   gem 'rubocop-performance', require: false
