@@ -97,3 +97,6 @@ RSpec/VariableName:
 RSpec/EmptyExampleGroup:
   Enabled: false
 
+RSpec/ScatteredSetup:
+  Enabled: false
+

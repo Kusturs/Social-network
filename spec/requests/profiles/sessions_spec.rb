@@ -90,7 +90,7 @@ RSpec.describe 'Profiles::Sessions API', type: :request do
         let(:payload) do
           {
             sub: 'invalid_user_id',
-            exp: (Time.now + 1.week).to_i,
+            exp: (Time.zone.now + 1.week).to_i,
             jti: SecureRandom.uuid,
             scp: 'profile'
           }

@@ -18,7 +18,6 @@ module Profiles
       if request.headers['Authorization'].present?
         payload = JWT.decode(request.headers['Authorization'].split(' ').last,
                              Rails.application.credentials.fetch(:secret_key_base)).first
-        # current_user = User.find_by(id: payload['sub'])
         current_profile = Profile.find_by(id: payload['sub'])
       end
 

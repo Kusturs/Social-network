@@ -28,7 +28,6 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    # @current_user ||= User.find(@current_user_id)
     @current_user ||= Profile.find(@current_user_id).user
   end
 

@@ -14,7 +14,7 @@ RSpec.describe 'Subscriptions API', type: :request do
   path '/subscriptions' do
     post 'Follow a user' do
       tags 'Subscriptions'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
       consumes 'application/json'
       parameter name: :id, in: :body, schema: {
@@ -64,7 +64,7 @@ RSpec.describe 'Subscriptions API', type: :request do
   path '/subscriptions/{id}' do
     delete 'Unfollow a user' do
       tags 'Subscriptions'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
       parameter name: 'id', in: :path, type: :integer, required: true
 
