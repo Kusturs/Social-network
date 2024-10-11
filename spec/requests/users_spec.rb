@@ -14,55 +14,55 @@ RSpec.describe 'Users API', type: :request do
   path '/users' do
     get 'Lists all users' do
       tags 'Users'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
 
       response '200', 'users found' do
         schema type: :object,
-        properties: {
-          users: {
-            type: :array,
-            items: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                username: { type: :string },
-                first_name: { type: :string },
-                second_name: { type: :string },
-                last_name: { type: :string },
-                posts: {
-                  type: :array,
-                  items: {
-                    type: :object,
-                    properties: {
-                      id: { type: :integer },
-                      content: { type: :string }
-                    }
-                  }
-                },
-                comments: {
-                  type: :array,
-                  items: {
-                    type: :object,
-                    properties: {
-                      id: { type: :integer },
-                      content: { type: :string }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          pagination: {
-            type: :object,
-            properties: {
-              count: { type: :integer },
-              page: { type: :integer },
-              items: { type: :integer },
-              pages: { type: :integer }
-            }
-          }
-        }
+               properties: {
+                 users: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       id: { type: :integer },
+                       username: { type: :string },
+                       first_name: { type: :string },
+                       second_name: { type: :string },
+                       last_name: { type: :string },
+                       posts: {
+                         type: :array,
+                         items: {
+                           type: :object,
+                           properties: {
+                             id: { type: :integer },
+                             content: { type: :string }
+                           }
+                         }
+                       },
+                       comments: {
+                         type: :array,
+                         items: {
+                           type: :object,
+                           properties: {
+                             id: { type: :integer },
+                             content: { type: :string }
+                           }
+                         }
+                       }
+                     }
+                   }
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     count: { type: :integer },
+                     page: { type: :integer },
+                     items: { type: :integer },
+                     pages: { type: :integer }
+                   }
+                 }
+               }
 
         run_test!
       end
@@ -70,7 +70,7 @@ RSpec.describe 'Users API', type: :request do
 
     post 'Creates a user' do
       tags 'Users'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       consumes 'application/json'
 
       parameter name: :user_params, in: :body, schema: {
@@ -81,7 +81,7 @@ RSpec.describe 'Users API', type: :request do
           second_name: { type: :string },
           last_name: { type: :string }
         },
-        required: [ 'username' ]
+        required: ['username']
       }
 
       response '201', 'user created' do
@@ -101,38 +101,38 @@ RSpec.describe 'Users API', type: :request do
 
     get 'Retrieves a user' do
       tags 'Users'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
 
       response '200', 'user found' do
         schema type: :object,
-          properties: {
-            id: { type: :integer },
-            username: { type: :string },
-            first_name: { type: :string },
-            second_name: { type: :string },
-            last_name: { type: :string },
-            posts: {
-              type: :array,
-              items: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  content: { type: :string }
-                }
-              }
-            },
-            comments: {
-              type: :array,
-              items: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  content: { type: :string }
-                }
-              }
-            }
-          }
+               properties: {
+                 id: { type: :integer },
+                 username: { type: :string },
+                 first_name: { type: :string },
+                 second_name: { type: :string },
+                 last_name: { type: :string },
+                 posts: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       id: { type: :integer },
+                       content: { type: :string }
+                     }
+                   }
+                 },
+                 comments: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       id: { type: :integer },
+                       content: { type: :string }
+                     }
+                   }
+                 }
+               }
 
         let(:id) { existing_user.id }
         run_test!
@@ -146,7 +146,7 @@ RSpec.describe 'Users API', type: :request do
 
     put 'Updates a user' do
       tags 'Users'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       consumes 'application/json'
       produces 'application/json'
 
