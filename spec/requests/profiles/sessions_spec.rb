@@ -70,7 +70,7 @@ RSpec.describe 'Profiles::Sessions API', type: :request do
     delete 'Destroys a session (logs out)' do
       tags 'Authentication'
       produces 'application/json'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
 
       response '200', 'logged out successfully' do
         let(:token) { Warden::JWTAuth::UserEncoder.new.call(profile, :profile, nil).first }

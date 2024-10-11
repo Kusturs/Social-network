@@ -17,7 +17,7 @@ RSpec.describe 'Profiles::Registrations API', type: :request do
               password: { type: :string },
               password_confirmation: { type: :string }
             },
-            required: ['email', 'password', 'password_confirmation']
+            required: %w[email password password_confirmation]
           },
           user: {
             type: :object,
@@ -26,7 +26,7 @@ RSpec.describe 'Profiles::Registrations API', type: :request do
               first_name: { type: :string },
               last_name: { type: :string }
             },
-            required: ['username', 'first_name', 'last_name']
+            required: %w[username first_name last_name]
           }
         },
         required: ['profile', 'user']

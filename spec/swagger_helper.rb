@@ -62,7 +62,7 @@ RSpec.configure do |config|
         {
           url: 'http://localhost:3000'
         }
-      ],
+      ]
     }
   }
 

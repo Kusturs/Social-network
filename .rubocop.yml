@@ -87,3 +87,13 @@ Layout/LineLength:
 
 RSpec/NestedGroups:
   Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/VariableName:
+  Enabled: false
+
+RSpec/EmptyExampleGroup:
+  Enabled: false
+
