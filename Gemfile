@@ -35,8 +35,8 @@ gem 'devise', '~> 4.9.0'
 gem 'devise-jwt', '~> 0.11.0'
 
 gem 'rswag-api'
-gem 'rswag-ui'
 gem 'rswag-specs'
+gem 'rswag-ui'
 
 gem 'pagy', '~> 6.0'
 gem 'panko_serializer'
@@ -63,9 +63,8 @@ end
 
 group :test do
   gem 'database_cleaner-active_record'
-  gem 'shoulda-matchers', '~> 5.0'
   gem 'rspec-rails', '~> 6.1.0'
-  gem 'rswag-specs'
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 group :development do

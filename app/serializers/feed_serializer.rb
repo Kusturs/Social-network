@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeedSerializer < Panko::Serializer
   attributes :user_info, :feed_posts
 

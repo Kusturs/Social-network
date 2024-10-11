@@ -86,7 +86,6 @@ RSpec.describe Comment, type: :model do
 
     it 'does not delete unrelated comments' do
       root = create(:comment)
-      child = create(:reply, parent_comment: root)
       unrelated = create(:comment)
 
       expect {

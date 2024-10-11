@@ -36,7 +36,7 @@ class Comment < ApplicationRecord
       );
     SQL
 
-    connection.execute(sanitize_sql([sql, root_id: comment_id]))
+    connection.execute(sanitize_sql([sql, { root_id: comment_id }]))
   end
 
   private
