@@ -60,6 +60,24 @@ paths:
                         type: integer
                       pages:
                         type: integer
+                example:
+                  comments:
+                  - id: 1
+                    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    author:
+                      id: 1
+                      email: lorem@example.com
+                  - id: 2
+                    content: Sed do eiusmod tempor incididunt ut labore et dolore
+                      magna aliqua.
+                    author:
+                      id: 2
+                      email: ipsum@example.com
+                  pagination:
+                    count: 50
+                    page: 1
+                    items: 10
+                    pages: 5
     post:
       summary: Creates a comment
       tags:
@@ -83,8 +101,12 @@ paths:
                   properties:
                     content:
                       type: string
+                      example: New comment content
                     parent_id:
                       type: integer
+                      required: false
+                      example: 1
+                      nullable: true
                   required:
                   - content
   "/comments/{id}":
@@ -111,15 +133,20 @@ paths:
                 properties:
                   id:
                     type: integer
+                    example: 1
                   content:
                     type: string
+                    example: Duis aute irure dolor in reprehenderit in voluptate velit
+                      esse cillum dolore eu fugiat nariatur.
                   author:
                     type: object
                     properties:
                       id:
                         type: integer
+                        example: 1
                       email:
                         type: string
+                        example: lorem@example.com
         '404':
           description: comment not found
     put:
@@ -145,6 +172,7 @@ paths:
                   properties:
                     content:
                       type: string
+                      example: Updated comment content
                   required:
                   - content
     delete:
@@ -190,6 +218,33 @@ paths:
                         created_at:
                           type: string
                           format: date-time
+                example:
+                  feed:
+                  - id: 1
+                    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Sed do eiusmod tempor incididunt ut labore et dol.
+                    author:
+                      id: 1
+                      first_name: Lorem
+                      last_name: Ipsum
+                      username: lorem_ipsum
+                      second_name: Dolor
+                    comments_count: 5
+                  - id: 2
+                    content: Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                      laboris nisi ut aliquip ex ea commodo consequat.
+                    author:
+                      id: 2
+                      first_name: Duis
+                      last_name: Aute
+                      username: duis_aute
+                      second_name: Irure
+                    comments_count: 3
+                  pagination:
+                    count: 100
+                    page: 1
+                    items: 20
+                    pages: 5
         '401':
           description: unauthorized
   "/posts":
@@ -221,17 +276,16 @@ paths:
                           properties:
                             id:
                               type: integer
-                            email:
+                            first_name:
                               type: string
-                        comments:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              content:
-                                type: string
+                            last_name:
+                              type: string
+                            username:
+                              type: string
+                            second_name:
+                              type: string
+                        comments_count:
+                          type: integer
                   pagination:
                     type: object
                     properties:
@@ -243,6 +297,33 @@ paths:
                         type: integer
                       pages:
                         type: integer
+                example:
+                  posts:
+                  - id: 1
+                    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Sed do eiusmod tempor incididunt ut labore et dol.
+                    author:
+                      id: 1
+                      first_name: Lorem
+                      last_name: Ipsum
+                      username: lorem_ipsum
+                      second_name: Dolor
+                    comments_count: 5
+                  - id: 2
+                    content: Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                      laboris nisi ut aliquip ex ea commodo consequat.
+                    author:
+                      id: 2
+                      first_name: Duis
+                      last_name: Aute
+                      username: duis_aute
+                      second_name: Irure
+                    comments_count: 3
+                  pagination:
+                    count: 100
+                    page: 1
+                    items: 20
+                    pages: 5
     post:
       summary: Creates a post
       tags:
@@ -261,6 +342,7 @@ paths:
               properties:
                 content:
                   type: string
+                  example: New post content
               required:
               - content
   "/posts/{id}":
@@ -294,7 +376,13 @@ paths:
                     properties:
                       id:
                         type: integer
-                      email:
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      username:
+                        type: string
+                      second_name:
                         type: string
                   comments:
                     type: array
@@ -305,6 +393,44 @@ paths:
                           type: integer
                         content:
                           type: string
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            username:
+                              type: string
+                example:
+                  posts:
+                  - id: 1
+                    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Sed do eiusmod tempor incididunt ut labore et lua.
+                    author:
+                      id: 1
+                      first_name: Lorem
+                      last_name: Ipsum
+                      username: lorem_ipsum
+                      second_name: Dolor
+                    comments_count: 5
+                  - id: 2
+                    content: Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                      laboris nisi ut aliquip ex ea commodo consequat.
+                    author:
+                      id: 2
+                      first_name: Duis
+                      last_name: Aute
+                      username: duis_aute
+                      second_name: Irure
+                    comments_count: 3
+                  pagination:
+                    count: 100
+                    page: 1
+                    items: 20
+                    pages: 5
         '404':
           description: post not found
     put:
@@ -327,6 +453,7 @@ paths:
               properties:
                 content:
                   type: string
+                  example: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     delete:
       summary: Deletes a post
       tags:
@@ -352,24 +479,31 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: Signed up successfully.
                   profile:
                     type: object
                     properties:
                       id:
                         type: integer
+                        example: 1
                       email:
                         type: string
+                        example: test@example.com
                       user:
                         type: object
                         properties:
                           id:
                             type: integer
+                            example: 1
                           username:
                             type: string
+                            example: testuser
                           first_name:
                             type: string
+                            example: Test
                           last_name:
                             type: string
+                            example: User
         '422':
           description: invalid request
           content:
@@ -381,6 +515,7 @@ paths:
                     type: array
                     items:
                       type: string
+                      example: Username can't be blank
       requestBody:
         content:
           application/json:
@@ -392,10 +527,13 @@ paths:
                   properties:
                     email:
                       type: string
+                      example: user@example.com
                     password:
                       type: string
+                      example: password123
                     password_confirmation:
                       type: string
+                      example: password123
                   required:
                   - email
                   - password
@@ -405,10 +543,13 @@ paths:
                   properties:
                     username:
                       type: string
+                      example: username
                     first_name:
                       type: string
+                      example: John
                     last_name:
                       type: string
+                      example: Doe
                   required:
                   - username
                   - first_name
@@ -432,8 +573,10 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: Logged in successfully.
                   token:
                     type: string
+                    example: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
                 required:
                 - message
                 - token
@@ -446,6 +589,7 @@ paths:
                 properties:
                   error:
                     type: string
+                    example: Invalid Email or password.
                 required:
                 - error
       requestBody:
@@ -459,8 +603,10 @@ paths:
                   properties:
                     email:
                       type: string
+                      example: user@example.com
                     password:
                       type: string
+                      example: password123
                   required:
                   - email
                   - password
@@ -483,8 +629,10 @@ paths:
                 properties:
                   status:
                     type: integer
+                    example: 200
                   message:
                     type: string
+                    example: Logged out successfully.
                 required:
                 - status
                 - message
@@ -497,8 +645,10 @@ paths:
                 properties:
                   status:
                     type: integer
+                    example: 401
                   message:
                     type: string
+                    example: Couldn't find an active session.
                 required:
                 - status
                 - message
@@ -525,6 +675,7 @@ paths:
               properties:
                 id:
                   type: integer
+                  example: 22
               required:
               - id
   "/subscriptions/{id}":
@@ -569,32 +720,14 @@ paths:
                       properties:
                         id:
                           type: integer
-                        username:
-                          type: string
                         first_name:
-                          type: string
-                        second_name:
                           type: string
                         last_name:
                           type: string
-                        posts:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              content:
-                                type: string
-                        comments:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              content:
-                                type: string
+                        username:
+                          type: string
+                        second_name:
+                          type: string
                   pagination:
                     type: object
                     properties:
@@ -606,34 +739,23 @@ paths:
                         type: integer
                       pages:
                         type: integer
-    post:
-      summary: Creates a user
-      tags:
-      - Users
-      security:
-      - bearer_auth: []
-      parameters: []
-      responses:
-        '201':
-          description: user created
-        '422':
-          description: invalid request
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                first_name:
-                  type: string
-                second_name:
-                  type: string
-                last_name:
-                  type: string
-              required:
-              - username
+                example:
+                  users:
+                  - id: 1
+                    first_name: Lorem
+                    last_name: Ipsum
+                    username: lorem_ipsum
+                    second_name: Dolor
+                  - id: 2
+                    first_name: Sit
+                    last_name: Amet
+                    username: sit_amet
+                    second_name: Consectetur
+                  pagination:
+                    count: 100
+                    page: 1
+                    items: 20
+                    pages: 5
   "/users/{id}":
     parameters:
     - name: id
@@ -658,14 +780,19 @@ paths:
                 properties:
                   id:
                     type: integer
+                    example: 1
                   username:
                     type: string
+                    example: lorem_ipsum
                   first_name:
                     type: string
+                    example: Lorem
                   second_name:
                     type: string
+                    example: Dolor
                   last_name:
                     type: string
+                    example: Ipsum
                   posts:
                     type: array
                     items:
@@ -673,45 +800,16 @@ paths:
                       properties:
                         id:
                           type: integer
+                          example: 1
                         content:
                           type: string
-                  comments:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
+                          example: Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit.
+                        comments_count:
                           type: integer
-                        content:
-                          type: string
+                          example: 5
         '404':
           description: user not found
-    put:
-      summary: Updates a user
-      tags:
-      - Users
-      security:
-      - bearer_auth: []
-      parameters: []
-      responses:
-        '200':
-          description: user updated
-        '422':
-          description: invalid request
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                first_name:
-                  type: string
-                second_name:
-                  type: string
-                last_name:
-                  type: string
 components:
   schemas:
     comment:

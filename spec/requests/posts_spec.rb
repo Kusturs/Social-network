@@ -31,19 +31,13 @@ RSpec.describe 'Posts API', type: :request do
                          type: :object,
                          properties: {
                            id: { type: :integer },
-                           email: { type: :string }
+                           first_name: { type: :string },
+                           last_name: { type: :string },
+                           username: { type: :string },
+                           second_name: { type: :string }
                          }
                        },
-                       comments: {
-                         type: :array,
-                         items: {
-                           type: :object,
-                           properties: {
-                             id: { type: :integer },
-                             content: { type: :string }
-                           }
-                         }
-                       }
+                       comments_count: { type: :integer }
                      }
                    }
                  },
@@ -55,6 +49,40 @@ RSpec.describe 'Posts API', type: :request do
                      items: { type: :integer },
                      pages: { type: :integer }
                    }
+                 }
+               },
+               example: {
+                 posts: [
+                   {
+                     id: 1,
+                     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dol.',
+                     author: {
+                       id: 1,
+                       first_name: 'Lorem',
+                       last_name: 'Ipsum',
+                       username: 'lorem_ipsum',
+                       second_name: 'Dolor'
+                     },
+                     comments_count: 5
+                   },
+                   {
+                     id: 2,
+                     content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                     author: {
+                       id: 2,
+                       first_name: 'Duis',
+                       last_name: 'Aute',
+                       username: 'duis_aute',
+                       second_name: 'Irure'
+                     },
+                     comments_count: 3
+                   }
+                 ],
+                 pagination: {
+                   count: 100,
+                   page: 1,
+                   items: 20,
+                   pages: 5
                  }
                }
 
@@ -70,7 +98,7 @@ RSpec.describe 'Posts API', type: :request do
       parameter name: :post_params, in: :body, schema: {
         type: :object,
         properties: {
-          content: { type: :string }
+          content: { type: :string, example: 'New post content' }
         },
         required: ['content']
       }
@@ -99,7 +127,10 @@ RSpec.describe 'Posts API', type: :request do
                    type: :object,
                    properties: {
                      id: { type: :integer },
-                     email: { type: :string }
+                     first_name: { type: :string },
+                     last_name: { type: :string },
+                     username: { type: :string },
+                     second_name: { type: :string }
                    }
                  },
                  comments: {
@@ -108,9 +139,52 @@ RSpec.describe 'Posts API', type: :request do
                      type: :object,
                      properties: {
                        id: { type: :integer },
-                       content: { type: :string }
+                       content: { type: :string },
+                       created_at: { type: :string },
+                       updated_at: { type: :string },
+                       author: {
+                         type: :object,
+                         properties: {
+                           id: { type: :integer },
+                           username: { type: :string }
+                         }
+                       }
                      }
                    }
+                 }
+               },
+               example: {
+                 posts: [
+                   {
+                     id: 1,
+                     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et lua.',
+                     author: {
+                       id: 1,
+                       first_name: 'Lorem',
+                       last_name: 'Ipsum',
+                       username: 'lorem_ipsum',
+                       second_name: 'Dolor'
+                     },
+                     comments_count: 5
+                   },
+                   {
+                     id: 2,
+                     content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                     author: {
+                       id: 2,
+                       first_name: 'Duis',
+                       last_name: 'Aute',
+                       username: 'duis_aute',
+                       second_name: 'Irure'
+                     },
+                     comments_count: 3
+                   }
+                 ],
+                 pagination: {
+                   count: 100,
+                   page: 1,
+                   items: 20,
+                   pages: 5
                  }
                }
 
@@ -132,19 +206,48 @@ RSpec.describe 'Posts API', type: :request do
       parameter name: :post_params, in: :body, schema: {
         type: :object,
         properties: {
-          content: { type: :string }
+          content: { type: :string, example: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' }
         }
       }
 
       response '200', 'post updated' do
         let(:id) { existing_post.id }
-        let(:post_params) { { content: 'Updated content' } }
+        let(:post_params) { { content: 'Lorem ipsum dolor sit amet' } }
+        schema type: :object,
+               properties: {
+                 id: { type: :integer, example: 1 },
+                 content: { type: :string, example: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                 author: {
+                   type: :object,
+                   properties: {
+                     id: { type: :integer, example: 1 },
+                     first_name: { type: :string, example: 'Lorem' },
+                     last_name: { type: :string, example: 'Ipsum' },
+                     username: { type: :string, example: 'lorem_ipsum' },
+                     second_name: { type: :string, example: 'Dolor' }
+                   }
+                 },
+                 comments_count: { type: :integer, example: 5 }
+               }
         run_test!
       end
 
       response '422', 'invalid request' do
         let(:id) { existing_post.id }
         let(:post_params) { { content: '' } }
+        schema type: :object,
+               properties: {
+                 errors: {
+                   type: :object,
+                   properties: {
+                     content: {
+                       type: :array,
+                       items: { type: :string },
+                       example: ["can't be blank"]
+                     }
+                   }
+                 }
+               }
         run_test!
       end
     end

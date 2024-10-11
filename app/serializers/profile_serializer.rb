@@ -4,6 +4,6 @@ class ProfileSerializer < Panko::Serializer
   attributes :id, :email, :user
 
   def user
-    UserSerializer.new.serialize(object.user)
+    Users::IndexSerializer.new.serialize(object.user)
   end
 end

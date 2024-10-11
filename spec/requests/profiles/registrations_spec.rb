@@ -13,18 +13,18 @@ RSpec.describe 'Profiles::Registrations API', type: :request do
           profile: {
             type: :object,
             properties: {
-              email: { type: :string },
-              password: { type: :string },
-              password_confirmation: { type: :string }
+              email: { type: :string, example: 'user@example.com' },
+              password: { type: :string, example: 'password123' },
+              password_confirmation: { type: :string, example: 'password123' }
             },
             required: %w[email password password_confirmation]
           },
           user: {
             type: :object,
             properties: {
-              username: { type: :string },
-              first_name: { type: :string },
-              last_name: { type: :string }
+              username: { type: :string, example: 'username' },
+              first_name: { type: :string, example: 'John' },
+              last_name: { type: :string, example: 'Doe' }
             },
             required: %w[username first_name last_name]
           }
@@ -50,19 +50,19 @@ RSpec.describe 'Profiles::Registrations API', type: :request do
 
         schema type: :object,
                properties: {
-                 message: { type: :string },
+                 message: { type: :string, example: 'Signed up successfully.' },
                  profile: {
                    type: :object,
                    properties: {
-                     id: { type: :integer },
-                     email: { type: :string },
+                     id: { type: :integer, example: 1 },
+                     email: { type: :string, example: 'test@example.com' },
                      user: {
                        type: :object,
                        properties: {
-                         id: { type: :integer },
-                         username: { type: :string },
-                         first_name: { type: :string },
-                         last_name: { type: :string }
+                         id: { type: :integer, example: 1 },
+                         username: { type: :string, example: 'testuser' },
+                         first_name: { type: :string, example: 'Test' },
+                         last_name: { type: :string, example: 'User' }
                        }
                      }
                    }
@@ -92,7 +92,7 @@ RSpec.describe 'Profiles::Registrations API', type: :request do
                properties: {
                  errors: {
                    type: :array,
-                   items: { type: :string }
+                   items: { type: :string, example: 'Username can\'t be blank' }
                  }
                }
 

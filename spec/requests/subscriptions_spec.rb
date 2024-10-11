@@ -20,7 +20,7 @@ RSpec.describe 'Subscriptions API', type: :request do
       parameter name: :id, in: :body, schema: {
         type: :object,
         properties: {
-          id: { type: :integer }
+          id: { type: :integer, example: 22 }
         },
         required: ['id']
       }

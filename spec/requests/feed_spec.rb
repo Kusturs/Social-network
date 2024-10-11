@@ -37,6 +37,40 @@ RSpec.describe 'Feed API', type: :request do
                      }
                    }
                  }
+               },
+               example: {
+                 feed: [
+                   {
+                     id: 1,
+                     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dol.',
+                     author: {
+                       id: 1,
+                       first_name: 'Lorem',
+                       last_name: 'Ipsum',
+                       username: 'lorem_ipsum',
+                       second_name: 'Dolor'
+                     },
+                     comments_count: 5
+                   },
+                   {
+                     id: 2,
+                     content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                     author: {
+                       id: 2,
+                       first_name: 'Duis',
+                       last_name: 'Aute',
+                       username: 'duis_aute',
+                       second_name: 'Irure'
+                     },
+                     comments_count: 3
+                   }
+                 ],
+                 pagination: {
+                   count: 100,
+                   page: 1,
+                   items: 20,
+                   pages: 5
+                 }
                }
 
         run_test!

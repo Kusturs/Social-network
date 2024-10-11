@@ -16,8 +16,8 @@ RSpec.describe 'Profiles::Sessions API', type: :request do
           profile: {
             type: :object,
             properties: {
-              email: { type: :string },
-              password: { type: :string }
+              email: { type: :string, example: 'user@example.com' },
+              password: { type: :string, example: 'password123' }
             },
             required: ['email', 'password']
           }
@@ -37,8 +37,8 @@ RSpec.describe 'Profiles::Sessions API', type: :request do
 
         schema type: :object,
                properties: {
-                 message: { type: :string },
-                 token: { type: :string }
+                 message: { type: :string, example: 'Logged in successfully.' },
+                 token: { type: :string, example: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c' }
                },
                required: ['message', 'token']
 
@@ -57,7 +57,7 @@ RSpec.describe 'Profiles::Sessions API', type: :request do
 
         schema type: :object,
                properties: {
-                 error: { type: :string }
+                 error: { type: :string, example: 'Invalid Email or password.' }
                },
                required: ['error']
 
@@ -78,8 +78,8 @@ RSpec.describe 'Profiles::Sessions API', type: :request do
 
         schema type: :object,
                properties: {
-                 status: { type: :integer },
-                 message: { type: :string }
+                 status: { type: :integer, example: 200 },
+                 message: { type: :string, example: 'Logged out successfully.' }
                },
                required: ['status', 'message']
 
@@ -104,8 +104,8 @@ RSpec.describe 'Profiles::Sessions API', type: :request do
 
         schema type: :object,
                properties: {
-                 status: { type: :integer },
-                 message: { type: :string }
+                 status: { type: :integer, example: 401 },
+                 message: { type: :string, example: "Couldn't find an active session." }
                },
                required: ['status', 'message']
 

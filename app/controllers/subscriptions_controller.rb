@@ -14,8 +14,7 @@ class SubscriptionsController < BaseController
   private
 
   def set_user
-    @user = User.find_by(id: params[:id])
-    render_not_found unless @user
+    @user = User.find(params[:id])
   end
 
   def handle_subscription_action(action, past_tense)
@@ -25,9 +24,5 @@ class SubscriptionsController < BaseController
     else
       render json: { error: "Unable to #{action} user" }, status: :unprocessable_entity
     end
-  end
-
-  def render_not_found
-    render json: { error: "Couldn't find User with id=#{params[:id]}" }, status: :not_found
   end
 end

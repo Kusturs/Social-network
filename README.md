@@ -1,55 +1,40 @@
 # Social Network API
 
-Это API для социальной сети, разработанное с использованием Ruby on Rails.
+This is an API for a social network, developed using Ruby on Rails.
 
-## Требования
+## Requirements
 
 - Docker
 - Docker Compose
 
-## Настройка
+## Setup
 
-1. Клонируйте репозиторий:
+1. Clone the repository:
    ```
-   git clone https://github.com/your-username/social-network-api.git
+   git clone https://gitlab.com/DimaMal/social-network-api.git
    cd social-network-api
    ```
 
-2. Создайте файл .env в корневой директории проекта и заполните его необходимыми переменными окружения (см. пример в файле .env.example).
-
-3. Соберите Docker образы:
+2. Copy the `.env.development` file to `.env` and set the necessary variables:
    ```
-   make build
+   cp .env.development .env
    ```
 
-4. Запустите контейнеры:
+3. Initialize the project:
    ```
-   make up
-   ```
-
-5. Настройте базу данных:
-   ```
-   make db-setup
+   make init
    ```
 
-## Использование
+## Usage
+- Build the image: `make build`
+- Start the server: `make up`
+- Stop the server: `make down`
+- View logs: `make logs`
+- Database setup: `make db-setup`
+- Full setup: `make init`
 
-- Запуск сервера: `make up`
-- Остановка сервера: `make down`
-- Просмотр логов: `make logs`
-- Запуск тестов: `make test`
-- Доступ к консоли Rails: `make shell`
+The API will be available at `http://localhost:3000`.
 
-API будет доступно по адресу `http://localhost:3000`.
+## API Documentation
 
-## Документация API
-
-Документация API доступна по адресу `http://localhost:3000/api-docs` после запуска сервера.
-
-## Разработка
-
-При внесении изменений в код, не забудьте обновить тесты и документацию API.
-
-## Лицензия
-
-[MIT License](LICENSE)
+API documentation is available at `http://localhost:3000/api-docs` after starting the server.

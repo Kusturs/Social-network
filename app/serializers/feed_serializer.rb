@@ -19,6 +19,7 @@ class FeedSerializer < Panko::Serializer
           id: post.author.id,
           username: post.author.username
         },
+        comments_count: post.comments_count,
         created_at: post.created_at
       }
     end

@@ -50,6 +50,32 @@ RSpec.describe 'Comments API', type: :request do
                      pages: { type: :integer }
                    }
                  }
+               },
+               example: {
+                 comments: [
+                   {
+                     id: 1,
+                     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                     author: {
+                       id: 1,
+                       email: 'lorem@example.com'
+                     }
+                   },
+                   {
+                     id: 2,
+                     content: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                     author: {
+                       id: 2,
+                       email: 'ipsum@example.com'
+                     }
+                   }
+                 ],
+                 pagination: {
+                   count: 50,
+                   page: 1,
+                   items: 10,
+                   pages: 5
+                 }
                }
 
         let(:post_id) { existing_post.id }
@@ -68,8 +94,8 @@ RSpec.describe 'Comments API', type: :request do
           comment: {
             type: :object,
             properties: {
-              content: { type: :string },
-              parent_id: { type: :integer }
+              content: { type: :string, example: 'New comment content' },
+              parent_id: { type: :integer, required: false, example: 1, nullable: true }
             },
             required: ['content']
           }
@@ -101,13 +127,14 @@ RSpec.describe 'Comments API', type: :request do
       response '200', 'comment found' do
         schema type: :object,
                properties: {
-                 id: { type: :integer },
-                 content: { type: :string },
+                 id: { type: :integer, example: 1 },
+                 content: { type: :string,
+                            example: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nariatur.' },
                  author: {
                    type: :object,
                    properties: {
-                     id: { type: :integer },
-                     email: { type: :string }
+                     id: { type: :integer, example: 1 },
+                     email: { type: :string, example: 'lorem@example.com' }
                    }
                  }
                }
@@ -132,7 +159,7 @@ RSpec.describe 'Comments API', type: :request do
           comment: {
             type: :object,
             properties: {
-              content: { type: :string }
+              content: { type: :string, example: 'Updated comment content' }
             },
             required: ['content']
           }

@@ -48,6 +48,8 @@ class PostsController < BaseController
 
   def set_current_user_post
     @post = current_user.posts.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'You could not modify not your posts' }, status: :not_found
   end
 
   def post_params
@@ -55,7 +57,7 @@ class PostsController < BaseController
   end
 
   def posts_scope
-    Post.includes(:comments).order(created_at: :desc)
+    Post.includes(:author).order(created_at: :desc)
   end
 
   def serialize_posts(posts)

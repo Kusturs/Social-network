@@ -26,30 +26,10 @@ RSpec.describe 'Users API', type: :request do
                      type: :object,
                      properties: {
                        id: { type: :integer },
-                       username: { type: :string },
                        first_name: { type: :string },
-                       second_name: { type: :string },
                        last_name: { type: :string },
-                       posts: {
-                         type: :array,
-                         items: {
-                           type: :object,
-                           properties: {
-                             id: { type: :integer },
-                             content: { type: :string }
-                           }
-                         }
-                       },
-                       comments: {
-                         type: :array,
-                         items: {
-                           type: :object,
-                           properties: {
-                             id: { type: :integer },
-                             content: { type: :string }
-                           }
-                         }
-                       }
+                       username: { type: :string },
+                       second_name: { type: :string }
                      }
                    }
                  },
@@ -62,35 +42,32 @@ RSpec.describe 'Users API', type: :request do
                      pages: { type: :integer }
                    }
                  }
+               },
+               example: {
+                 users: [
+                   {
+                     id: 1,
+                     first_name: 'Lorem',
+                     last_name: 'Ipsum',
+                     username: 'lorem_ipsum',
+                     second_name: 'Dolor'
+                   },
+                   {
+                     id: 2,
+                     first_name: 'Sit',
+                     last_name: 'Amet',
+                     username: 'sit_amet',
+                     second_name: 'Consectetur'
+                   }
+                 ],
+                 pagination: {
+                   count: 100,
+                   page: 1,
+                   items: 20,
+                   pages: 5
+                 }
                }
 
-        run_test!
-      end
-    end
-
-    post 'Creates a user' do
-      tags 'Users'
-      security [bearer_auth: []]
-      consumes 'application/json'
-
-      parameter name: :user_params, in: :body, schema: {
-        type: :object,
-        properties: {
-          username: { type: :string },
-          first_name: { type: :string },
-          second_name: { type: :string },
-          last_name: { type: :string }
-        },
-        required: ['username']
-      }
-
-      response '201', 'user created' do
-        let(:user_params) { { username: 'newuser', first_name: 'New', last_name: 'User' } }
-        run_test!
-      end
-
-      response '422', 'invalid request' do
-        let(:user_params) { { username: '' } }
         run_test!
       end
     end
@@ -107,28 +84,19 @@ RSpec.describe 'Users API', type: :request do
       response '200', 'user found' do
         schema type: :object,
                properties: {
-                 id: { type: :integer },
-                 username: { type: :string },
-                 first_name: { type: :string },
-                 second_name: { type: :string },
-                 last_name: { type: :string },
+                 id: { type: :integer, example: 1 },
+                 username: { type: :string, example: 'lorem_ipsum' },
+                 first_name: { type: :string, example: 'Lorem' },
+                 second_name: { type: :string, example: 'Dolor' },
+                 last_name: { type: :string, example: 'Ipsum' },
                  posts: {
                    type: :array,
                    items: {
                      type: :object,
                      properties: {
-                       id: { type: :integer },
-                       content: { type: :string }
-                     }
-                   }
-                 },
-                 comments: {
-                   type: :array,
-                   items: {
-                     type: :object,
-                     properties: {
-                       id: { type: :integer },
-                       content: { type: :string }
+                       id: { type: :integer, example: 1 },
+                       content: { type: :string, example: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+                       comments_count: { type: :integer, example: 5 }
                      }
                    }
                  }
@@ -140,35 +108,6 @@ RSpec.describe 'Users API', type: :request do
 
       response '404', 'user not found' do
         let(:id) { 'invalid' }
-        run_test!
-      end
-    end
-
-    put 'Updates a user' do
-      tags 'Users'
-      security [bearer_auth: []]
-      consumes 'application/json'
-      produces 'application/json'
-
-      parameter name: :user_params, in: :body, schema: {
-        type: :object,
-        properties: {
-          username: { type: :string },
-          first_name: { type: :string },
-          second_name: { type: :string },
-          last_name: { type: :string }
-        }
-      }
-
-      response '200', 'user updated' do
-        let(:id) { existing_user.id }
-        let(:user_params) { { first_name: 'Updated', last_name: 'Name' } }
-        run_test!
-      end
-
-      response '422', 'invalid request' do
-        let(:id) { existing_user.id }
-        let(:user_params) { { username: '' } }
         run_test!
       end
     end

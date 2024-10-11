@@ -4,7 +4,7 @@ ifndef DOCKER_COMPOSE
 	DOCKER_COMPOSE := docker compose
 endif
 
-.PHONY: build up down logs shell test db-setup
+.PHONY: build up down logs db-setup init
 
 build:
 	if [ -f config/master.key ]; then \
@@ -23,25 +23,10 @@ down:
 logs:
 	$(DOCKER_COMPOSE) logs -f
 
-console:
-	$(DOCKER_COMPOSE) exec web bundle exec rails c
-
-db-test-setup:
-	$(DOCKER_COMPOSE) up -d db_test 
-
-run-tests:
-	$(DOCKER_COMPOSE) run --rm web bash -c "bundle exec rails db:test:prepare && bundle exec rspec"
-
-test:
-	make db-test-setup
-	make run-tests
-
 db-setup:
 	$(DOCKER_COMPOSE) run --rm web bundle exec rails db:drop db:create db:migrate db:seed
 
 init:
+	make build
 	make db-setup 
 	make up 
-
-check-compose:
-	@echo "Using: $(DOCKER_COMPOSE)"
