@@ -17,40 +17,40 @@ RSpec.describe 'Comments API', type: :request do
 
     get 'Lists all comments for a post' do
       tags 'Comments'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
       parameter name: :parent_id, in: :query, type: :integer, required: false, description: 'Parent comment ID'
 
       response '200', 'comments found' do
         schema type: :object,
-          properties: {
-            comments: {
-              type: :array,
-              items: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  content: { type: :string },
-                  author: {
-                    type: :object,
-                    properties: {
-                      id: { type: :integer },
-                      email: { type: :string }
-                    }
-                  }
-                }
-              }
-            },
-            pagination: {
-              type: :object,
-              properties: {
-                count: { type: :integer },
-                page: { type: :integer },
-                items: { type: :integer },
-                pages: { type: :integer }
-              }
-            }
-          }
+               properties: {
+                 comments: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       id: { type: :integer },
+                       content: { type: :string },
+                       author: {
+                         type: :object,
+                         properties: {
+                           id: { type: :integer },
+                           email: { type: :string }
+                         }
+                       }
+                     }
+                   }
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     count: { type: :integer },
+                     page: { type: :integer },
+                     items: { type: :integer },
+                     pages: { type: :integer }
+                   }
+                 }
+               }
 
         let(:post_id) { existing_post.id }
         run_test!
@@ -59,7 +59,7 @@ RSpec.describe 'Comments API', type: :request do
 
     post 'Creates a comment' do
       tags 'Comments'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       consumes 'application/json'
 
       parameter name: :comment_params, in: :body, schema: {
@@ -95,22 +95,22 @@ RSpec.describe 'Comments API', type: :request do
 
     get 'Retrieves a comment' do
       tags 'Comments'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
 
       response '200', 'comment found' do
         schema type: :object,
-          properties: {
-            id: { type: :integer },
-            content: { type: :string },
-            author: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                email: { type: :string }
-              }
-            }
-          }
+               properties: {
+                 id: { type: :integer },
+                 content: { type: :string },
+                 author: {
+                   type: :object,
+                   properties: {
+                     id: { type: :integer },
+                     email: { type: :string }
+                   }
+                 }
+               }
 
         let(:id) { existing_comment.id }
         run_test!
@@ -124,7 +124,7 @@ RSpec.describe 'Comments API', type: :request do
 
     put 'Updates a comment' do
       tags 'Comments'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       consumes 'application/json'
       parameter name: :comment_params, in: :body, schema: {
         type: :object,
@@ -154,7 +154,7 @@ RSpec.describe 'Comments API', type: :request do
 
     delete 'Deletes a comment' do
       tags 'Comments'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
 
       response '204', 'comment deleted' do
         let(:id) { existing_comment.id }
