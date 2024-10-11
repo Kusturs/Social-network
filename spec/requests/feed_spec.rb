@@ -13,31 +13,31 @@ RSpec.describe 'Feed API', type: :request do
   path '/feed' do
     get 'Retrieves user feed' do
       tags 'Feed'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
 
       response '200', 'feed retrieved' do
         schema type: :object,
-          properties: {
-            feed: {
-              type: :array,
-              items: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  content: { type: :string },
-                  author: {
-                    type: :object,
-                    properties: {
-                      id: { type: :integer },
-                      username: { type: :string }
-                    }
-                  },
-                  created_at: { type: :string, format: 'date-time' }
-                }
-              }
-            }
-          }
+               properties: {
+                 feed: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       id: { type: :integer },
+                       content: { type: :string },
+                       author: {
+                         type: :object,
+                         properties: {
+                           id: { type: :integer },
+                           username: { type: :string }
+                         }
+                       },
+                       created_at: { type: :string, format: 'date-time' }
+                     }
+                   }
+                 }
+               }
 
         run_test!
       end
