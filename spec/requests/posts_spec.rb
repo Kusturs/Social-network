@@ -14,49 +14,49 @@ RSpec.describe 'Posts API', type: :request do
   path '/posts' do
     get 'Lists all posts' do
       tags 'Posts'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
 
       response '200', 'posts found' do
         schema type: :object,
-        properties: {
-          posts: {
-            type: :array,
-            items: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                content: { type: :string },
-                author: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer },
-                    email: { type: :string }
-                  }
-                },
-                comments: {
-                  type: :array,
-                  items: {
-                    type: :object,
-                    properties: {
-                      id: { type: :integer },
-                      content: { type: :string }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          pagination: {
-            type: :object,
-            properties: {
-              count: { type: :integer },
-              page: { type: :integer },
-              items: { type: :integer },
-              pages: { type: :integer }
-            }
-          }
-        }
+               properties: {
+                 posts: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       id: { type: :integer },
+                       content: { type: :string },
+                       author: {
+                         type: :object,
+                         properties: {
+                           id: { type: :integer },
+                           email: { type: :string }
+                         }
+                       },
+                       comments: {
+                         type: :array,
+                         items: {
+                           type: :object,
+                           properties: {
+                             id: { type: :integer },
+                             content: { type: :string }
+                           }
+                         }
+                       }
+                     }
+                   }
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     count: { type: :integer },
+                     page: { type: :integer },
+                     items: { type: :integer },
+                     pages: { type: :integer }
+                   }
+                 }
+               }
 
         run_test!
       end
@@ -64,7 +64,7 @@ RSpec.describe 'Posts API', type: :request do
 
     post 'Creates a post' do
       tags 'Posts'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       consumes 'application/json'
 
       parameter name: :post_params, in: :body, schema: {
@@ -72,7 +72,7 @@ RSpec.describe 'Posts API', type: :request do
         properties: {
           content: { type: :string }
         },
-        required: [ 'content' ]
+        required: ['content']
       }
 
       response '201', 'post created' do
@@ -87,33 +87,32 @@ RSpec.describe 'Posts API', type: :request do
 
     get 'Retrieves a post' do
       tags 'Posts'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       produces 'application/json'
-
 
       response '200', 'post found' do
         schema type: :object,
-          properties: {
-            id: { type: :integer },
-            content: { type: :string },
-            author: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                email: { type: :string }
-              }
-            },
-            comments: {
-              type: :array,
-              items: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  content: { type: :string }
-                }
-              }
-            }
-          }
+               properties: {
+                 id: { type: :integer },
+                 content: { type: :string },
+                 author: {
+                   type: :object,
+                   properties: {
+                     id: { type: :integer },
+                     email: { type: :string }
+                   }
+                 },
+                 comments: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       id: { type: :integer },
+                       content: { type: :string }
+                     }
+                   }
+                 }
+               }
 
         let(:id) { existing_post.id }
         run_test!
@@ -127,7 +126,7 @@ RSpec.describe 'Posts API', type: :request do
 
     put 'Updates a post' do
       tags 'Posts'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
       consumes 'application/json'
 
       parameter name: :post_params, in: :body, schema: {
@@ -152,7 +151,7 @@ RSpec.describe 'Posts API', type: :request do
 
     delete 'Deletes a post' do
       tags 'Posts'
-      security [ bearer_auth: [] ]
+      security [bearer_auth: []]
 
       response '204', 'post deleted' do
         let(:id) { existing_post.id }
