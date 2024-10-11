@@ -6,18 +6,19 @@ module Profiles
     respond_to :json
 
     def create
-      build_resource(sign_up_params)
-      resource.build_user(user_params)
-      resource.save
-      if resource.persisted?
+      ActiveRecord::Base.transaction do
+        build_resource(sign_up_params)
+        resource.build_user(user_params)
+        resource.save!
         sign_up(resource_name, resource)
-        render json: {
-          message: 'Signed up successfully.',
-          profile: ProfileSerializer.new.serialize(resource)
-        }, status: :created
-      else
-        render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
       end
+
+      render json: {
+        message: 'Signed up successfully.',
+        profile: ProfileSerializer.new.serialize(resource)
+      }, status: :created
+    rescue ActiveRecord::RecordInvalid
+      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
     end
 
     private
