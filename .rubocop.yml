@@ -16,6 +16,7 @@ require:
 
 AllCops:
   Exclude:
+    - 'spec/swagger/**/*'
     - 'db/**/*'
     - 'config/**/*'
     - 'vendor/**/*'
@@ -67,4 +68,22 @@ Style/SymbolProc:
   Enabled: true
 
 Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 15
+
+Layout/LineLength:
+  Max: 140
+
+RSpec/NestedGroups:
   Enabled: false

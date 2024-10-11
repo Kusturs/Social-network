@@ -6,16 +6,16 @@ RSpec.describe Comment, type: :model do
   let(:comment) { build(:comment, author: user, post: post) }
 
   describe 'associations' do
-    it { should belong_to(:author).class_name('User').inverse_of(:comments) }
-    it { should belong_to(:post).inverse_of(:comments) }
-    it { should belong_to(:parent).class_name('Comment').optional }
-    it { should have_many(:replies).class_name('Comment').with_foreign_key('parent_id').inverse_of(:parent) }
+    it { is_expected.to belong_to(:author).class_name('User').inverse_of(:comments) }
+    it { is_expected.to belong_to(:post).inverse_of(:comments) }
+    it { is_expected.to belong_to(:parent).class_name('Comment').optional }
+    it { is_expected.to have_many(:replies).class_name('Comment').with_foreign_key('parent_id').inverse_of(:parent) }
   end
 
   describe 'validations' do
-    it { should validate_length_of(:content).is_at_most(100) }
+    it { is_expected.to validate_length_of(:content).is_at_most(100) }
 
-    context 'parent comment belongs to same post' do
+    context 'when parent comment belongs to the same post' do
       it 'is valid when parent comment belongs to the same post' do
         parent_comment = create(:comment, post: post)
         reply = build(:reply, parent_comment: parent_comment, post: post)
@@ -37,8 +37,8 @@ RSpec.describe Comment, type: :model do
       it 'returns only root comments' do
         root_comment = create(:comment, post: post)
         child_comment = create(:reply, parent_comment: root_comment)
-        expect(Comment.root_comments).to include(root_comment)
-        expect(Comment.root_comments).not_to include(child_comment)
+        expect(described_class.root_comments).to include(root_comment)
+        expect(described_class.root_comments).not_to include(child_comment)
       end
     end
   end
@@ -74,14 +74,14 @@ RSpec.describe Comment, type: :model do
       child2 = create(:reply, parent_comment: root)
       grandchild = create(:reply, parent_comment: child1)
 
-      expect {
-        Comment.delete_with_replies(root.id)
-      }.to change(Comment, :count).by(-4)
+      expect do
+        described_class.delete_with_replies(root.id)
+      end.to change(described_class, :count).by(-4)
 
-      expect(Comment.exists?(root.id)).to be false
-      expect(Comment.exists?(child1.id)).to be false
-      expect(Comment.exists?(child2.id)).to be false
-      expect(Comment.exists?(grandchild.id)).to be false
+      expect(described_class.exists?(root.id)).to be false
+      expect(described_class.exists?(child1.id)).to be false
+      expect(described_class.exists?(child2.id)).to be false
+      expect(described_class.exists?(grandchild.id)).to be false
     end
 
     it 'does not delete unrelated comments' do
@@ -89,11 +89,11 @@ RSpec.describe Comment, type: :model do
       create(:reply, parent_comment: root)
       unrelated = create(:comment)
 
-      expect {
-        Comment.delete_with_replies(root.id)
-      }.to change(Comment, :count).by(-2)
+      expect do
+        described_class.delete_with_replies(root.id)
+      end.to change(described_class, :count).by(-2)
 
-      expect(Comment.exists?(unrelated.id)).to be true
+      expect(described_class.exists?(unrelated.id)).to be true
     end
   end
 end

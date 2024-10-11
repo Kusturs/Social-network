@@ -5,8 +5,8 @@ RSpec.describe Subscription, type: :model do
   let(:followed) { create(:user) }
 
   describe 'associations' do
-    it { should belong_to(:follower).class_name('User') }
-    it { should belong_to(:followed).class_name('User') }
+    it { is_expected.to belong_to(:follower).class_name('User') }
+    it { is_expected.to belong_to(:followed).class_name('User') }
   end
 
   describe 'validations' do
@@ -17,36 +17,36 @@ RSpec.describe Subscription, type: :model do
 
     it 'is not valid when following self' do
       subscription = build(:subscription, follower: follower, followed: follower)
-      expect(subscription).to_not be_valid
+      expect(subscription).not_to be_valid
       expect(subscription.errors[:base]).to include('Cannot follow yourself')
     end
   end
 
   describe 'counter cache' do
     it 'increments followed_count on follower' do
-      expect {
+      expect do
         create(:subscription, follower: follower, followed: followed)
-      }.to change { follower.reload.followed_count }.by(1)
+      end.to change { follower.reload.followed_count }.by(1)
     end
 
     it 'increments followers_count on followed' do
-      expect {
+      expect do
         create(:subscription, follower: follower, followed: followed)
-      }.to change { followed.reload.followers_count }.by(1)
+      end.to change { followed.reload.followers_count }.by(1)
     end
 
     it 'decrements followed_count on follower when destroyed' do
       subscription = create(:subscription, follower: follower, followed: followed)
-      expect {
+      expect do
         subscription.destroy
-      }.to change { follower.reload.followed_count }.by(-1)
+      end.to change { follower.reload.followed_count }.by(-1)
     end
 
     it 'decrements followers_count on followed when destroyed' do
       subscription = create(:subscription, follower: follower, followed: followed)
-      expect {
+      expect do
         subscription.destroy
-      }.to change { followed.reload.followers_count }.by(-1)
+      end.to change { followed.reload.followers_count }.by(-1)
     end
   end
 
@@ -54,8 +54,8 @@ RSpec.describe Subscription, type: :model do
     it 'does not allow duplicate subscriptions' do
       create(:subscription, follower: follower, followed: followed)
       duplicate_subscription = build(:subscription, follower: follower, followed: followed)
-      expect(duplicate_subscription).to_not be_valid
-      expect(duplicate_subscription.errors[:follower_id]).to include("already follows this user")
+      expect(duplicate_subscription).not_to be_valid
+      expect(duplicate_subscription.errors[:follower_id]).to include('already follows this user')
     end
 
     it 'allows different users to follow the same user' do
