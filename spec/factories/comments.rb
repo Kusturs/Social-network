@@ -17,7 +17,7 @@ FactoryBot.define do
       parent { parent_comment || association(:comment) }
       post { parent&.post }
 
-      after(:build) do |comment, evaluator|
+      after(:build) do |comment, _evaluator|
         comment.post ||= comment.parent.post if comment.parent
       end
     end

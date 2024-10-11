@@ -18,11 +18,11 @@ FactoryBot.define do
         create(:subscription, follower: user, followed: create(:user))
       end
     end
-    
+
     trait :with_passive_subscription do
-        after(:create) do |user|
-          create(:subscription, follower: create(:user), followed: user)
-        end
+      after(:create) do |user|
+        create(:subscription, follower: create(:user), followed: user)
       end
     end
+  end
 end
