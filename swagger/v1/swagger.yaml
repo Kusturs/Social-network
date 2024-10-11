@@ -156,6 +156,42 @@ paths:
       responses:
         '204':
           description: comment deleted
+  "/feed":
+    get:
+      summary: Retrieves user feed
+      tags:
+      - Feed
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: feed retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  feed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            username:
+                              type: string
+                        created_at:
+                          type: string
+                          format: date-time
+        '401':
+          description: unauthorized
   "/posts":
     get:
       summary: Lists all posts
@@ -217,8 +253,6 @@ paths:
       responses:
         '201':
           description: post created
-        '422':
-          description: invalid request
       requestBody:
         content:
           application/json:
@@ -227,11 +261,8 @@ paths:
               properties:
                 content:
                   type: string
-                author_id:
-                  type: integer
               required:
               - content
-              - author_id
   "/posts/{id}":
     parameters:
     - name: id
@@ -471,6 +502,51 @@ paths:
                 required:
                 - status
                 - message
+  "/subscriptions":
+    post:
+      summary: Follow a user
+      tags:
+      - Subscriptions
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: User followed successfully
+        '422':
+          description: Unable to follow user
+        '404':
+          description: User not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+              - id
+  "/subscriptions/{id}":
+    delete:
+      summary: Unfollow a user
+      tags:
+      - Subscriptions
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: User unfollowed successfully
+        '422':
+          description: Unable to unfollow user
+        '404':
+          description: User not found
   "/users":
     get:
       summary: Lists all users
@@ -636,15 +712,6 @@ paths:
                   type: string
                 last_name:
                   type: string
-    delete:
-      summary: Deletes a user
-      tags:
-      - Users
-      security:
-      - bearer_auth: []
-      responses:
-        '204':
-          description: user deleted
 components:
   schemas:
     comment:

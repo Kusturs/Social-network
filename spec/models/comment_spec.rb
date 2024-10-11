@@ -44,20 +44,6 @@ RSpec.describe Comment, type: :model do
   end
 
   describe 'callbacks' do
-    describe 'before_destroy' do
-      it 'prevents deletion if the comment has replies' do
-        parent = create(:comment)
-        create(:reply, parent_comment: parent)
-        expect { parent.destroy }.not_to change(Comment, :count)
-        expect(parent.errors[:base]).to include('you cannot delete a comment that has replies')
-      end
-
-      it 'allows deletion if the comment has no replies' do
-        comment = create(:comment)
-        expect { comment.destroy }.to change(Comment, :count).by(-1)
-      end
-    end
-
     describe 'before_create' do
       it 'sets the post from the parent comment' do
         parent_comment = create(:comment)

@@ -14,7 +14,7 @@ class PostsController < BaseController
   end
 
   def show
-    render json: serialize_post(@post)
+    render json: PostSerializer.new.serialize_to_json(@post)
   end
 
   def create
@@ -43,7 +43,7 @@ class PostsController < BaseController
   private
 
   def set_post
-    @post = Post.find(params[:id])
+    @post = Post.includes(comments: :author).find(params[:id])
   end
 
   def set_current_user_post
@@ -55,7 +55,7 @@ class PostsController < BaseController
   end
 
   def posts_scope
-    Post.includes(:author, :comments).order(created_at: :desc)
+    Post.includes(:author, comments: :author).order(created_at: :desc)
   end
 
   def serialize_posts(posts)

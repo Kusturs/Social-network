@@ -19,10 +19,10 @@ module Profiles
         payload = JWT.decode(request.headers['Authorization'].split(' ').last,
                              Rails.application.credentials.fetch(:secret_key_base)).first
         # current_user = User.find_by(id: payload['sub'])
-        current_user = Profile.find_by(id: payload['sub'])
+        current_profile = Profile.find_by(id: payload['sub'])
       end
 
-      if current_user
+      if current_profile
         render json: {
           status: 200,
           message: 'Logged out successfully.'

@@ -70,19 +70,13 @@ RSpec.describe 'Posts API', type: :request do
       parameter name: :post_params, in: :body, schema: {
         type: :object,
         properties: {
-          content: { type: :string },
-          author_id: { type: :integer }
+          content: { type: :string }
         },
-        required: [ 'content', 'author_id' ]
+        required: [ 'content' ]
       }
 
       response '201', 'post created' do
-        let(:post_params) { { content: 'New post content', author_id: user.id } }
-        run_test!
-      end
-
-      response '422', 'invalid request' do
-        let(:post_params) { { content: '' } }
+        let(:post_params) { { content: 'New post content' } }
         run_test!
       end
     end

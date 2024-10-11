@@ -22,16 +22,9 @@ Rails.application.routes.draw do
                registrations: 'profiles/registrations'
              }
 
-  resources :users, only: %i[index show create update destroy] do
-    member do
-      post 'follow', to: 'subscriptions#create'
-      delete 'unfollow', to: 'subscriptions#destroy'
-    end
+  resources :users, only: %i[index show create update destroy]
 
-    collection do
-      get :me
-    end
-  end
+  resources :feed, only: %i[index]
 
   resources :posts, only: %i[index show create update destroy] do
     resources :comments, only: %i[index create]
@@ -39,5 +32,5 @@ Rails.application.routes.draw do
 
   resources :comments
 
-  resources :subscriptions, only: %i[index destroy]
+  resources :subscriptions, only: %i[create destroy]
 end

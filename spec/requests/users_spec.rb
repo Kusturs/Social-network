@@ -172,59 +172,5 @@ RSpec.describe 'Users API', type: :request do
         run_test!
       end
     end
-
-    delete 'Deletes a user' do
-      tags 'Users'
-      security [ bearer_auth: [] ]
-
-      response '204', 'user deleted' do
-        let(:id) { existing_user.id }
-        run_test!
-      end
-    end
   end
-
-  # path '/users/me' do
-  #   get 'Retrieves current user and feed' do
-  #     tags 'Users'
-  #     security [ bearer_auth: [] ]
-  #     produces 'application/json'
-
-  #     response '200', 'current user and feed found' do
-  #       schema type: :object,
-  #         properties: {
-  #           user: {
-  #             type: :object,
-  #             properties: {
-  #               id: { type: :integer },
-  #               username: { type: :string },
-  #               first_name: { type: :string },
-  #               second_name: { type: :string },
-  #               last_name: { type: :string }
-  #             }
-  #           },
-  #           feed: {
-  #             type: :array,
-  #             items: {
-  #               type: :object,
-  #               properties: {
-  #                 id: { type: :integer },
-  #                 content: { type: :string },
-  #                 author: {
-  #                   type: :object,
-  #                   properties: {
-  #                     id: { type: :integer },
-  #                     username: { type: :string }
-  #                   }
-  #                 },
-  #                 created_at: { type: :string, format: 'date-time' }
-  #               }
-  #             }
-  #           }
-  #         }
-
-  #       run_test!
-  #     end
-  #   end
-  # end
 end

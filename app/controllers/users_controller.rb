@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < BaseController
-  before_action :set_user, only: %i[show update destroy]
+  before_action :set_user, only: %i[show update]
 
   def index
     @pagy, @users = pagy(users_scope)
@@ -33,17 +33,6 @@ class UsersController < BaseController
     end
   end
 
-  def destroy
-    @user.destroy
-    head :no_content
-  end
-
-  def me
-    @feed = FeedService.new(current_user).call
-
-    render json: serialize_feed(@feed)
-  end
-
   private
 
   def set_user
@@ -64,9 +53,5 @@ class UsersController < BaseController
 
   def serialize_user(user)
     UserSerializer.new.serialize_to_json(user)
-  end
-
-  def serialize_feed(feed)
-    FeedSerializer.new.serialize_to_json(feed)
   end
 end
